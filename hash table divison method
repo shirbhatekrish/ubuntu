@@ -1,0 +1,165 @@
+import java.util.Scanner;
+
+class Node {
+    int key;
+    String value;
+    Node next;
+
+    Node(int key, String value) {
+        this.key = key;
+        this.value = value;
+        this.next = null;
+    }
+}
+
+class HashTable {
+    private final int SIZE = 10;       
+    private Node[] table;             
+
+    public HashTable() {
+        table = new Node[SIZE];
+    }
+
+    // Hash function
+    private int hashFunction(int key) {
+        return key % SIZE;
+    }
+
+    // Insert method with duplicate check
+    public void insert(int key, String value) {
+        int index = hashFunction(key);
+        Node newNode = new Node(key, value);
+
+        if (table[index] == null) {
+            table[index] = newNode;
+            System.out.println("Inserted (" + key + ", " + value + ") at index " + index);
+            return;
+        }
+
+        Node temp = table[index];
+        Node prev = null;
+
+        while (temp != null) {
+            if (temp.key == key) {
+                if (temp.value.equals(value)) {
+                    System.out.println("Duplicate entry! Key " + key + " with same value already exists.");
+                    return;
+                } else {
+                    temp.value = value; 
+                    System.out.println("Key " + key + " already exists. Value updated to: " + value);
+                    return;
+                }
+            }
+            prev = temp;
+            temp = temp.next;
+        }
+        prev.next = newNode;
+        System.out.println("Inserted (" + key + ", " + value + ") at index " + index);
+    }
+
+
+    public void search(int key) {
+        int index = hashFunction(key);
+        Node temp = table[index];
+
+        while (temp != null) {
+            if (temp.key == key) {
+                System.out.println("Found key '" + key + "' at index " + index +
+                                   " with value: " + temp.value);
+                return;
+            }
+            temp = temp.next;
+        }
+        System.out.println("Key '" + key + "' not found.");
+    }
+
+    public void delete(int key) {
+        int index = hashFunction(key);
+        Node temp = table[index];
+        Node prev = null;
+
+        while (temp != null) {
+            if (temp.key == key) {
+                if (prev == null) {
+                    table[index] = temp.next;
+                } else {
+                    prev.next = temp.next;
+                }
+                System.out.println("Key '" + key + "' deleted from index " + index);
+                return;
+            }
+            prev = temp;
+            temp = temp.next;
+        }
+        System.out.println("Key '" + key + "' not found for deletion.");
+    }
+
+    public void display() {
+        System.out.println("\nHash Table:");
+        for (int i = 0; i < SIZE; i++) {
+            System.out.print(i + ": ");
+            Node temp = table[i];
+            if (temp == null) {
+                System.out.println("Empty");
+            } else {
+                while (temp != null) {
+                    System.out.print("[" + temp.key + ":" + temp.value + "] -> ");
+                    temp = temp.next;
+                }
+                System.out.println("null");
+            }
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        HashTable ht = new HashTable();
+        int key;
+
+        while (true) {
+            System.out.println("\n1. Insert");
+            System.out.println("2. Display");
+            System.out.println("3. Search");
+            System.out.println("4. Delete");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter key: ");
+                    key = sc.nextInt();
+                    System.out.print("Enter value: ");
+                    String value = sc.next();
+                    ht.insert(key, value);
+                    break;
+
+                case 2:
+                    ht.display();
+                    break;
+
+                case 3:
+                    System.out.print("Enter key to search: ");
+                    key = sc.nextInt();
+                    ht.search(key);
+                    break;
+
+                case 4:
+                    System.out.print("Enter key to delete: ");
+                    key = sc.nextInt();
+                    ht.delete(key);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    sc.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+}

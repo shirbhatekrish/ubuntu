@@ -1,0 +1,73 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class CustomerSearch {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Input number of customer accounts
+        System.out.print("Enter number of customer accounts: ");
+        int n = sc.nextInt();
+        int[] accounts = new int[n];
+
+        // Input customer account IDs
+        System.out.println("Enter " + n + " customer account IDs:");
+        for (int i = 0; i < n; i++) {
+            accounts[i] = sc.nextInt();
+        }
+
+        // Input target ID to search
+        System.out.print("Enter Customer ID to search: ");
+        int targetID = sc.nextInt();
+
+        // Linear Search
+        System.out.println("\nLinear Search:");
+        int linearResult = linearSearch(accounts, targetID);
+        if (linearResult != -1) {
+            System.out.println("Customer ID " + targetID + " found at index " + linearResult);
+        } else {
+            System.out.println("Customer ID " + targetID + " not found");
+        }
+
+        // Sort accounts for Binary Search
+        Arrays.sort(accounts);
+        System.out.println("\nSorted Accounts: " + Arrays.toString(accounts));
+
+        // Binary Search
+        System.out.println("\nBinary Search:");
+        int binaryResult = binarySearch(accounts, targetID);
+        if (binaryResult != -1) {
+            System.out.println("Customer ID " + targetID + " found at index " + binaryResult);
+        } else {
+            System.out.println("Customer ID " + targetID + " not found");
+        }
+
+        sc.close();
+    }
+
+    // Linear Search Method
+    public static int linearSearch(int[] arr, int target) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == target) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // Binary Search Method
+    public static int binarySearch(int[] arr, int target) {
+        int left = 0, right = arr.length - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+}

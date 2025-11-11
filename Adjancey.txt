@@ -1,0 +1,121 @@
+import java.util.Scanner;
+
+public class Main {
+
+    static final int MAX = 20; // maximum number of nodes
+    static char[] names = new char[MAX];
+    static int[][] adjMatrix = new int[MAX][MAX];
+    static int[][] adjList = new int[MAX][MAX];
+    static int[] degree = new int[MAX];
+    static int n; // number of vertices
+
+    static void addEdge(int u, int v) {
+        adjMatrix[u][v] = 1;
+        adjMatrix[v][u] = 1;
+        adjList[u][degree[u]++] = v;
+        adjList[v][degree[v]++] = u;
+    }
+
+    static void displayAdjMatrix() {
+        System.out.println("\nAdjacency Matrix:");
+        System.out.print("    ");
+        for (int i = 0; i < n; i++) System.out.print(names[i] + " ");
+        System.out.println();
+        for (int i = 0; i < n; i++) {
+            System.out.print(names[i] + " | ");
+            for (int j = 0; j < n; j++) {
+                System.out.print(adjMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    static void displayAdjList() {
+        System.out.println("\nAdjacency List:");
+        for (int i = 0; i < n; i++) {
+            System.out.print(names[i] + " -> ");
+            for (int j = 0; j < degree[i]; j++) {
+                System.out.print(names[adjList[i][j]] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    static void bfs(int start) {
+        boolean[] visited = new boolean[n];
+        int[] queue = new int[n];
+        int front = 0, rear = 0;
+
+        visited[start] = true;
+        queue[rear++] = start;
+
+        System.out.print("\nBFS starting from " + names[start] + ": ");
+        while (front < rear) {
+            int u = queue[front++];
+            System.out.print(names[u] + " ");
+
+            for (int i = 0; i < degree[u]; i++) {
+                int v = adjList[u][i];
+                if (!visited[v]) {
+                    visited[v] = true;
+                    queue[rear++] = v;
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    static void dfs(int start, boolean[] visited) {
+        visited[start] = true;
+        System.out.print(names[start] + " ");
+        for (int v = 0; v < n; v++) {
+            if (adjMatrix[start][v] == 1 && !visited[v]) {
+                dfs(v, visited);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of vertices: ");
+        n = sc.nextInt();
+        sc.nextLine();
+
+        System.out.println("Enter vertex names (like A B C D ...):");
+        String[] temp = sc.nextLine().split(" ");
+        for (int i = 0; i < n; i++) names[i] = temp[i].charAt(0);
+
+        System.out.print("Enter number of edges: ");
+        int e = sc.nextInt();
+        sc.nextLine();
+
+        System.out.println("Enter each edge (Example: A B):");
+        for (int i = 0; i < e; i++) {
+            String[] edge = sc.nextLine().split(" ");
+            char a = edge[0].charAt(0);
+            char b = edge[1].charAt(0);
+
+            int u = -1, v = -1;
+            for (int j = 0; j < n; j++) {
+                if (names[j] == a) u = j;
+                if (names[j] == b) v = j;
+            }
+            addEdge(u, v);
+        }
+
+        displayAdjList();
+        displayAdjMatrix();
+
+        System.out.print("\nEnter starting vertex for traversal: ");
+        char startChar = sc.next().charAt(0);
+        int start = -1;
+        for (int i = 0; i < n; i++) if (names[i] == startChar) start = i;
+
+        bfs(start);
+        boolean[] visited = new boolean[n];
+        System.out.print("DFS starting from " + names[start] + ": ");
+        dfs(start, visited);
+        System.out.println();
+    }
+}

@@ -1,0 +1,76 @@
+import java.util.Scanner;
+
+public class EmployeeSalaries {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Input number of employees
+        System.out.print("Enter number of employees: ");
+        int n = sc.nextInt();
+        double[] salaries = new double[n];
+
+        // Input salaries
+        System.out.println("Enter salary of each employee:");
+        for (int i = 0; i < n; i++) {
+            System.out.print("Employee " + (i + 1) + ": ");
+            salaries[i] = sc.nextDouble();
+        }
+
+        // Choose sorting algorithm
+        System.out.println("\nChoose Sorting Algorithm:");
+        System.out.println("1. Selection Sort");
+        System.out.println("2. Bubble Sort");
+        System.out.print("Enter your choice (1 or 2): ");
+        int choice = sc.nextInt();
+
+        // Copy salaries for sorting
+        double[] sorted = salaries.clone();
+
+        // Apply selected sorting algorithm
+        if (choice == 1) {
+            // Selection Sort
+            for (int i = 0; i < n - 1; i++) {
+                int min = i;
+                for (int j = i + 1; j < n; j++) {
+                    if (sorted[j] < sorted[min]) {
+                        min = j;
+                    }
+                }
+                double temp = sorted[i];
+                sorted[i] = sorted[min];
+                sorted[min] = temp;
+            }
+            System.out.println("\nSalaries sorted using Selection Sort:");
+        } else if (choice == 2) {
+            // Bubble Sort
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+                    if (sorted[j] > sorted[j + 1]) {
+                        double temp = sorted[j];
+                        sorted[j] = sorted[j + 1];
+                        sorted[j + 1] = temp;
+                    }
+                }
+            }
+            System.out.println("\nSalaries sorted using Bubble Sort:");
+        } else {
+            System.out.println("Invalid choice!");
+            return;
+        }
+
+        // Display sorted salaries
+        for (double salary : sorted) {
+            System.out.print(salary + " ");
+        }
+
+        // Display top five highest salaries
+        System.out.println("\n\nTop five highest salaries:");
+        int start = Math.max(0, n - 5);
+        for (int i = n - 1; i >= start; i--) {
+            System.out.print(sorted[i] + " ");
+        }
+
+        System.out.println();
+        sc.close();
+    }
+}

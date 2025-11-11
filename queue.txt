@@ -1,0 +1,153 @@
+import java.util.Scanner;
+public class EventProcessingSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        EventQueue eventQueue = new EventQueue(10); // Queue size is 10
+
+        while (true) {
+            System.out.println("\n1. Add Event");
+            System.out.println("2. Process Next Event");
+            System.out.println("3. Display Pending Events");
+            System.out.println("4. Cancel Event");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter event description: ");
+                    String event = scanner.nextLine();
+                    eventQueue.addEvent(event);
+                    break;
+
+                case 2:
+                    eventQueue.processNextEvent();
+                    break;
+
+                case 3:
+                    eventQueue.displayPendingEvents();
+                    break;
+
+                case 4:
+                    System.out.print("Enter event description to cancel: ");
+                    String cancelEvent = scanner.nextLine();
+                    eventQueue.cancelEvent(cancelEvent);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting system.");
+                    scanner.close();
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+}
+
+class EventQueue {
+    private String[] queue;
+    private int front;
+    private int rear;
+    private int capacity;
+
+    public EventQueue(int size) {
+        capacity = size;
+        queue = new String[capacity];
+        front = -1;
+        rear = -1;
+    }
+
+    // Add an event to the queue
+    public void addEvent(String event) {
+        if ((rear + 1) % capacity == front) {
+            System.out.println("Queue is full. Cannot add new event.");
+            return;
+        }
+
+        if (front == -1) {
+            front = 0;
+        }
+
+        rear = (rear + 1) % capacity;
+        queue[rear] = event;
+        System.out.println("Event added: " + event);
+    }
+
+    // Process the next event (FIFO)
+    public void processNextEvent() {
+        if (front == -1) {
+            System.out.println("No events to process.");
+            return;
+        }
+
+        String event = queue[front];
+        System.out.println("Processing event: " + event);
+
+        if (front == rear) {
+            front = -1;
+            rear = -1;
+        } else {
+            front = (front + 1) % capacity;
+        }
+    }
+
+    // Display pending events
+    public void displayPendingEvents() {
+        if (front == -1) {
+            System.out.println("No pending events.");
+            return;
+        }
+
+        System.out.println("Pending Events:");
+        int i = front;
+        while (true) {
+            System.out.println("- " + queue[i]);
+            if (i == rear) break;
+            i = (i + 1) % capacity;
+        }
+    }
+
+    // Cancel an event by name
+    public void cancelEvent(String event) {
+        if (front == -1) {
+            System.out.println("No events to cancel.");
+            return;
+        }
+
+        int i = front;
+        boolean found = false;
+        while (true) {
+            if (queue[i].equals(event)) {
+                found = true;
+                break;
+            }
+            if (i == rear) break;
+            i = (i + 1) % capacity;
+        }
+
+        if (!found) {
+            System.out.println("Event not found in queue.");
+            return;
+        }
+
+        // Shift elements to remove the canceled event
+        while (i != rear) {
+            int next = (i + 1) % capacity;
+            queue[i] = queue[next];
+            i = next;
+        }
+
+        if (front == rear) {
+            front = -1;
+            rear = -1;
+        } else {
+            rear = (rear - 1 + capacity) % capacity;
+        }
+
+        System.out.println("Event canceled: " + event);
+    }
+}
