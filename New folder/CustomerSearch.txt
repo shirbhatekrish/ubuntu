@@ -1,0 +1,50 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class CustomerSearch {
+    // Linear Search method
+    public static boolean linearSearch(int[] customerList, int targetId) {
+        for (int id : customerList) {
+            if (id == targetId)
+                return true;
+        }
+        return false;
+    }
+
+    // Binary Search method
+    public static boolean binarySearch(int[] sortedList, int targetId) {
+        int low = 0;
+        int high = sortedList.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (sortedList[mid] == targetId)
+                return true;
+            else if (sortedList[mid] < targetId)
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        int[] customerIds = {102, 205, 150, 123, 301, 110, 175};
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Customer ID to search: ");
+        int searchId = sc.nextInt();
+
+        // Linear Search
+        boolean foundLinear = linearSearch(customerIds, searchId);
+        System.out.println(foundLinear ? "Linear Search: Found" : "Linear Search: Not Found");
+
+        // Binary Search (requires sorted list)
+        int[] sortedIds = Arrays.copyOf(customerIds, customerIds.length);
+        Arrays.sort(sortedIds);
+        boolean foundBinary = binarySearch(sortedIds, searchId);
+        System.out.println(foundBinary ? "Binary Search: Found" : "Binary Search: Not Found");
+
+        sc.close();
+    }
+}

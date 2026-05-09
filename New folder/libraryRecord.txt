@@ -1,0 +1,90 @@
+import java.util.*;
+
+public class LibraryRecords {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter total number of members: ");
+        int n = sc.nextInt();
+
+        int[] borrowCount = new int[n];
+        System.out.println("Enter number of books borrowed by each member:");
+        for (int i = 0; i < n; i++) {
+            borrowCount[i] = sc.nextInt();
+        }
+
+        // 1 Compute average books borrowed
+        double average = computeAverage(borrowCount);
+        System.out.println("\nAverage number of books borrowed: " + average);
+
+        // 2️ Find book with highest and lowest borrow count
+        int max = findMax(borrowCount);
+        int min = findMin(borrowCount);
+        System.out.println("Highest number of borrowings: " + max);
+        System.out.println("Lowest number of borrowings: " + min);
+
+        // 3️ Count members who borrowed 0 books
+        int zeroBorrowers = countZeroBorrowers(borrowCount);
+        System.out.println("Members who borrowed 0 books: " + zeroBorrowers);
+
+        // 4️ Find the most frequently borrowed book count (mode)
+        int mode = findMode(borrowCount);
+        System.out.println("Most frequently borrowed book count (Mode): " + mode);
+
+        sc.close();
+    }
+
+    // Function to compute average
+    static double computeAverage(int[] arr) {
+        int sum = 0;
+        for (int val : arr)
+            sum += val;
+        return (double) sum / arr.length;
+    }
+
+    // Function to find maximum
+    static int findMax(int[] arr) {
+        int max = arr[0];
+        for (int val : arr)
+            if (val > max)
+                max = val;
+        return max;
+    }
+
+    // Function to find minimum
+    static int findMin(int[] arr) {
+        int min = arr[0];
+        for (int val : arr)
+            if (val < min)
+                min = val;
+        return min;
+    }
+
+    // Function to count zero borrowers
+    static int countZeroBorrowers(int[] arr) {
+        int count = 0;
+        for (int val : arr)
+            if (val == 0)
+                count++;
+        return count;
+    }
+
+    // Function to find mode (most frequent borrow count)
+    static int findMode(int[] arr) {
+        HashMap<Integer, Integer> freqMap = new HashMap<>();
+
+        for (int val : arr) {
+            freqMap.put(val, freqMap.getOrDefault(val, 0) + 1);
+        }
+
+        int mode = arr[0];
+        int maxFreq = 0;
+        for (Map.Entry<Integer, Integer> e : freqMap.entrySet()) {
+            if (e.getValue() > maxFreq) {
+                maxFreq = e.getValue();
+                mode = e.getKey();
+            }
+        }
+        return mode;
+    }
+}

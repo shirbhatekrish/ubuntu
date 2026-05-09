@@ -1,0 +1,65 @@
+import java.util.*;
+
+public class EmployeeSalary1 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of employees: ");
+        int n = sc.nextInt();
+        double[] salary = new double[n];
+
+        System.out.println("Enter employee salaries:");
+        for (int i = 0; i < n; i++) {
+            salary[i] = sc.nextDouble();
+        }
+
+        // ---------- Bubble Sort ----------
+        double[] bubbleSorted = salary.clone();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (bubbleSorted[j] > bubbleSorted[j + 1]) {
+                    double temp = bubbleSorted[j];
+                    bubbleSorted[j] = bubbleSorted[j + 1];
+                    bubbleSorted[j + 1] = temp;
+                }
+            }
+        }
+
+        System.out.println("\nSalaries (Bubble Sort - Ascending):");
+        for (int i = 0; i < n; i++) {
+            System.out.println(bubbleSorted[i]);
+        }
+
+        System.out.println("\nTop 5 Highest Salaries (Bubble Sort):");
+        int count = Math.min(5, n);
+        for (int i = n - 1; i >= n - count; i--) {
+            System.out.println(bubbleSorted[i]);
+        }
+
+        // ---------- Selection Sort ----------
+        double[] selectionSorted = salary.clone();
+        for (int i = 0; i < n - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < n; j++) {
+                if (selectionSorted[j] < selectionSorted[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            double temp = selectionSorted[minIndex];
+            selectionSorted[minIndex] = selectionSorted[i];
+            selectionSorted[i] = temp;
+        }
+
+        System.out.println("\nSalaries (Selection Sort - Ascending):");
+        for (int i = 0; i < n; i++) {
+            System.out.println(selectionSorted[i]);
+        }
+
+        System.out.println("\nTop 5 Highest Salaries (Selection Sort):");
+        for (int i = n - 1; i >= n - count; i--) {
+            System.out.println(selectionSorted[i]);
+        }
+
+        sc.close();
+    }
+}

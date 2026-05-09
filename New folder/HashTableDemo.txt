@@ -1,0 +1,143 @@
+
+import java.util.Scanner;
+
+class HashTable {
+    int size;
+    int[] table;
+    final int EMPTY = -1;
+    final int DELETED = -2;
+
+    
+    HashTable(int size) {
+        this.size = size;
+        table = new int[size];
+        for (int i = 0; i < size; i++) {
+            table[i] = EMPTY;
+        }
+    }
+
+    
+    int hash(int key) {
+        return key % size;
+    }
+
+    
+    void insert(int key) {
+        int index = hash(key);
+        int start = index;  e
+
+        do {
+            if (table[index] == EMPTY || table[index] == DELETED) {
+                table[index] = key;
+                System.out.println("Inserted key " + key + " at index " + index);
+                return;
+            }
+            index = (index + 1) % size; 
+        } while (index != start);
+
+        System.out.println("Hash Table is full! Cannot insert " + key);
+    }
+
+    void search(int key) {
+        int index = hash(key);
+        int start = index;
+
+        do {
+            if (table[index] == EMPTY) {
+                System.out.println("Key " + key + " not found.");
+                return;
+            } else if (table[index] == key) {
+                System.out.println("Key " + key + " found at index " + index);
+                return;
+            }
+            index = (index + 1) % size;
+        } while (index != start);
+
+        System.out.println("Key " + key + " not found.");
+    }
+
+    void delete(int key) {
+        int index = hash(key);
+        int start = index;
+
+        do {
+            if (table[index] == EMPTY) {
+                System.out.println("Key " + key + " not found.");
+                return;
+            } else if (table[index] == key) {
+                table[index] = DELETED;
+                System.out.println("Key " + key + " deleted from index " + index);
+                return;
+            }
+            index = (index + 1) % size;
+        } while (index != start);
+
+        System.out.println("Key " + key + " not found.");
+    }
+
+    void display() {
+        System.out.println("\nHash Table Contents:");
+        for (int i = 0; i < size; i++) {
+            if (table[i] == EMPTY)
+                System.out.println(i + " --> EMPTY");
+            else if (table[i] == DELETED)
+                System.out.println(i + " --> DELETED");
+            else
+                System.out.println(i + " --> " + table[i]);
+        }
+    }
+}
+
+public class HashTableDemo {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter size of hash table: ");
+        int size = sc.nextInt();
+
+        HashTable ht = new HashTable(size);
+
+        while (true) {
+            System.out.println("\n--- HASH TABLE OPERATIONS ---");
+            System.out.println("1. Insert");
+            System.out.println("2. Search");
+            System.out.println("3. Delete");
+            System.out.println("4. Display");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter key to insert: ");
+                    int keyInsert = sc.nextInt();
+                    ht.insert(keyInsert);
+                    break;
+
+                case 2:
+                    System.out.print("Enter key to search: ");
+                    int keySearch = sc.nextInt();
+                    ht.search(keySearch);
+                    break;
+
+                case 3:
+                    System.out.print("Enter key to delete: ");
+                    int keyDelete = sc.nextInt();
+                    ht.delete(keyDelete);
+                    break;
+
+                case 4:
+                    ht.display();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting program...");
+                    sc.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice! Try again.");
+            }
+        }
+    }
+}

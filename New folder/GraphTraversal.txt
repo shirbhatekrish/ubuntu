@@ -1,0 +1,76 @@
+import java.util.*;
+
+public class GraphTraversal {
+    // Number of locations (nodes)
+    static final int NUM_LOCATIONS = 5; // A, B, C, D, E
+
+    // Adjacency Matrix for DFS
+    static int[][] adjMatrix = {
+        // A  B  C  D  E
+        {0, 1, 1, 0, 0}, // A
+        {1, 0, 0, 1, 0}, // B
+        {1, 0, 0, 1, 1}, // C
+        {0, 1, 1, 0, 0}, // D
+        {0, 0, 1, 0, 0}  // E
+    };
+
+    // Adjacency List for BFS
+    static Map<Character, List<Character>> adjList = new HashMap<>();
+
+    // Build adjacency list (same graph)
+    static {
+        adjList.put('A', Arrays.asList('B', 'C'));
+        adjList.put('B', Arrays.asList('A', 'D'));
+        adjList.put('C', Arrays.asList('A', 'D', 'E'));
+        adjList.put('D', Arrays.asList('B', 'C'));
+        adjList.put('E', Arrays.asList('C'));
+    }
+
+    // DFS using adjacency matrix
+    static void dfs(int start, boolean[] visited) {
+        visited[start] = true;
+        System.out.print((char)('A' + start) + " ");
+
+        for (int i = 0; i < NUM_LOCATIONS; i++) {
+            if (adjMatrix[start][i] == 1 && !visited[i]) {
+                dfs(i, visited);
+            }
+        }
+    }
+
+    // BFS using adjacency list
+    static void bfs(char start) {
+        Queue<Character> queue = new LinkedList<>();
+        Set<Character> visited = new HashSet<>();
+
+        queue.add(start);
+        visited.add(start);
+
+        while (!queue.isEmpty()) {
+            char node = queue.poll();
+            System.out.print(node + " ");
+
+            for (char neighbor : adjList.get(node)) {
+                if (!visited.contains(neighbor)) {
+                    queue.add(neighbor);
+                    visited.add(neighbor);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Graph Locations: A, B, C, D, E");
+        
+        // DFS Traversal (Adjacency Matrix)
+        System.out.print("\nDFS Traversal starting from A: ");
+        boolean[] visited = new boolean[NUM_LOCATIONS];
+        dfs(0, visited);
+
+        // BFS Traversal (Adjacency List)
+        System.out.print("\nBFS Traversal starting from A: ");
+        bfs('A');
+
+        System.out.println();
+    }
+}

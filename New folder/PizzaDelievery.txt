@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class PizzaDelivery {
+    static final int INF = 9999; // A large number representing infinity
+
+    // Dijkstra's Algorithm
+    static void dijkstra(int[][] graph, int start) {
+        int n = graph.length;
+        int[] dist = new int[n];       // Shortest distance from start
+        boolean[] visited = new boolean[n]; // Track visited nodes
+
+        // Initialize distances
+        Arrays.fill(dist, INF);
+        dist[start] = 0;
+
+        for (int i = 0; i < n - 1; i++) {
+            int u = minDistance(dist, visited);
+            visited[u] = true;
+
+            for (int v = 0; v < n; v++) {
+                if (!visited[v] && graph[u][v] != 0 && dist[u] + graph[u][v] < dist[v]) {
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+
+        // Display shortest time to each location
+        System.out.println("\nMinimum time from Pizza Shop to each location:");
+        for (int i = 0; i < n; i++) {
+            System.out.println("Shop -> " + (char)('A' + i) + " : " + dist[i] + " mins");
+        }
+    }
+
+    // Helper: find node with minimum distance
+    static int minDistance(int[] dist, boolean[] visited) {
+        int min = INF, minIndex = -1;
+        for (int v = 0; v < dist.length; v++) {
+            if (!visited[v] && dist[v] <= min) {
+                min = dist[v];
+                minIndex = v;
+            }
+        }
+        return minIndex;
+    }
+
+    public static void main(String[] args) {
+        // Graph represented as adjacency matrix (time in minutes)
+        // Locations: A (Pizza Shop), B, C, D, E
+        int[][] graph = {
+            //A  B  C  D  E
+            { 0, 4, 2, 0, 0 }, // A
+            { 4, 0, 5, 10, 0 }, // B
+            { 2, 5, 0, 3, 7 }, // C
+            { 0,10, 3, 0, 1 }, // D
+            { 0, 0, 7, 1, 0 }  // E
+        };
+
+        System.out.println("Locations: A (Shop), B, C, D, E");
+        dijkstra(graph, 0); // Start from A (the pizza shop)
+    }
+}

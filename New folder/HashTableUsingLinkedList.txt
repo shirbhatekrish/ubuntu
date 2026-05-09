@@ -1,0 +1,141 @@
+
+class Node {
+    int key;
+    String value;
+    Node next;
+
+    Node(int key, String value) {
+        this.key = key;
+        this.value = value;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    Node head;
+
+    
+    void add(int key, String value) {
+        Node newNode = new Node(key, value);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        Node temp = head;
+        while (temp.next != null)
+            temp = temp.next;
+        temp.next = newNode;
+    }
+
+    
+    String search(int key) {
+        Node temp = head;
+        while (temp != null) {
+            if (temp.key == key)
+                return temp.value;
+            temp = temp.next;
+        }
+        return null;
+    }
+
+    
+    boolean delete(int key) {
+        if (head == null)
+            return false;
+
+        if (head.key == key) {
+            head = head.next;
+            return true;
+        }
+
+        Node temp = head;
+        while (temp.next != null) {
+            if (temp.next.key == key) {
+                temp.next = temp.next.next;
+                return true;
+            }
+            temp = temp.next;
+        }
+        return false;
+    }
+
+    
+    void display() {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print("(" + temp.key + "," + temp.value + ") ");
+            temp = temp.next;
+        }
+    }
+}
+
+class HashTable {
+    int SIZE = 10;
+    LinkedList[] table;
+
+    HashTable() {
+        table = new LinkedList[SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            table[i] = new LinkedList();
+        }
+    }
+
+    
+    int hash(int key) {
+        return key % SIZE;
+    }
+
+    
+    void insert(int key, String value) {
+        int index = hash(key);
+        table[index].add(key, value);
+        System.out.println("Inserted (" + key + "," + value + ") at index " + index);
+    }
+
+    
+    void search(int key) {
+        int index = hash(key);
+        String value = table[index].search(key);
+        if (value != null)
+            System.out.println("Found: " + value);
+        else
+            System.out.println("Key not found!");
+    }
+
+    
+    void delete(int key) {
+        int index = hash(key);
+        boolean deleted = table[index].delete(key);
+        if (deleted)
+            System.out.println("Deleted key " + key);
+        else
+            System.out.println("Key not found!");
+    }
+
+    
+    void display() {
+        System.out.println("\nHash Table:");
+        for (int i = 0; i < SIZE; i++) {
+            System.out.print(i + " → ");
+            table[i].display();
+            System.out.println();
+        }
+    }
+}
+
+public class HashTableUsingLinkedList {
+    public static void main(String[] args) {
+        HashTable ht = new HashTable();
+
+        ht.insert(5, "Apple");
+        ht.insert(15, "Banana");  
+        ht.insert(25, "Cherry");  
+        ht.insert(7, "Mango");
+
+        ht.display();
+
+        ht.search(15);
+        ht.delete(25);
+        ht.display();
+    }
+}

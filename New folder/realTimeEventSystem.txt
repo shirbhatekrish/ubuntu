@@ -1,0 +1,104 @@
+
+import java.util.Scanner;
+
+class EventQueue {
+    String[] queue;     
+    int front, rear, count, size;
+
+    EventQueue(int size) {
+        this.size = size;
+        queue = new String[size];
+        front = 0;
+        rear = -1;
+        count = 0;
+    }
+
+    
+    void addEvent(String event) {
+        if (count == size) {
+            System.out.println("⚠️ Queue is full! Cannot add new event.");
+            return;
+        }
+        rear = (rear + 1) % size;  
+        queue[rear] = event;
+        count++;
+        System.out.println("✅ Event added: " + event);
+    }
+
+    
+    void processNextEvent() {
+        if (count == 0) {
+            System.out.println("⚠️ No events to process!");
+            return;
+        }
+        String event = queue[front];
+        front = (front + 1) % size;
+        count--;
+        System.out.println("⚙️ Processing event: " + event);
+    }
+
+    
+    void displayPendingEvents() {
+        if (count == 0) {
+            System.out.println("⚠️ No pending events!");
+            return;
+        }
+        System.out.println("\n📋 Pending Events:");
+        for (int i = 0; i < count; i++) {
+            int index = (front + i) % size;
+            System.out.println((i + 1) + ". " + queue[index]);
+        }
+    }
+
+    
+    void cancelEvent(String eventName) {
+        if (count == 0) {
+            System.out.println("⚠️ Queue is empty!");
+            return;
+        }
+
+        boolean found = false;
+        int currentIndex = front;
+        for (int i = 0; i < count; i++) {
+            int index = (front + i) % size;
+            if (queue[index].equalsIgnoreCase(eventName)) {
+                found = true;
+                
+                for (int j = i; j < count - 1; j++) {
+                    int nextIndex = (front + j + 1) % size;
+                    queue[(front + j) % size] = queue[nextIndex];
+                }
+                rear = (rear - 1 + size) % size;
+                count--;
+                System.out.println("🗑️ Event canceled: " + eventName);
+                break;
+            }
+        }
+        if (!found)
+            System.out.println("❌ Event not found!");
+    }
+}
+
+public class RealTimeEventSystemArray {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        EventQueue queue = new EventQueue(5); 
+
+        queue.addEvent("User Login");
+        queue.addEvent("File Upload");
+        queue.addEvent("Payment Received");
+        queue.addEvent("Email Notification");
+
+        queue.displayPendingEvents();
+
+        queue.processNextEvent();
+        queue.cancelEvent("File Upload");
+
+        queue.displayPendingEvents();
+
+        queue.addEvent("Database Update");
+        queue.displayPendingEvents();
+
+        sc.close();
+    }
+}
