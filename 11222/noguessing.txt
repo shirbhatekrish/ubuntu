@@ -1,0 +1,18 @@
+low = 1
+high = 100
+
+secret = int(input("Enter a number (1-100): "))
+
+while low <= high:
+    guess = (low + high) // 2
+    print("Agent guesses:", guess)
+
+    if guess == secret:
+        print("Number found!")
+        break
+    elif guess < secret:
+        print("Higher")
+        low = guess + 1
+    else:
+        print("Lower")
+        high = guess - 1

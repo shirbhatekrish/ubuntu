@@ -1,0 +1,49 @@
+def dfs(maze, x, y, goal, visited, path):
+
+    rows = len(maze)
+    cols = len(maze[0])
+
+    # Check boundaries and obstacles
+    if (x < 0 or x >= rows or
+        y < 0 or y >= cols or
+        maze[x][y] == 1 or
+        (x, y) in visited):
+        return False
+
+    visited.add((x, y))
+    path.append((x, y))
+
+    # Goal reached
+    if (x, y) == goal:
+        return True
+
+    # Move Up, Down, Left, Right
+    directions = [(-1,0), (1,0), (0,-1), (0,1)]
+
+    for dx, dy in directions:
+        if dfs(maze, x + dx, y + dy, goal, visited, path):
+            return True
+
+    # Backtrack
+    path.pop()
+    return False
+
+
+maze = [
+    [0, 0, 1, 0],
+    [1, 0, 1, 0],
+    [0, 0, 0, 0],
+    [0, 1, 1, 0]
+]
+
+start = (0, 0)
+goal = (3, 3)
+
+visited = set()
+path = []
+
+if dfs(maze, start[0], start[1], goal, visited, path):
+    print("Path Found:")
+    print(path)
+else:
+    print("No Path Exists")

@@ -1,0 +1,20 @@
+# Initial State: A on Table, B on Table, C on Table
+# Goal State: A on B, B on C
+
+goal_stack = ["ON(A,B)", "ON(B,C)"]
+plan = []
+
+while goal_stack:
+    goal = goal_stack.pop()
+
+    if goal == "ON(B,C)":
+        plan.append("PickUp(B)")
+        plan.append("Stack(B,C)")
+
+    elif goal == "ON(A,B)":
+        plan.append("PickUp(A)")
+        plan.append("Stack(A,B)")
+
+print("Plan:")
+for step in plan:
+    print(step)

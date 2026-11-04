@@ -1,0 +1,18 @@
+import math
+
+def minimax(depth, isMax):
+    if depth == 0:
+        return 0
+
+    if isMax:
+        best = -math.inf
+        for val in [3, 5]:
+            best = max(best, val)
+        return best
+    else:
+        best = math.inf
+        for val in [2, 9]:
+            best = min(best, val)
+        return best
+
+print("Best Move Value:", minimax(1, True))
